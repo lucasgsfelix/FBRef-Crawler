@@ -1,10 +1,20 @@
 """ Resposible to parse the tables from FBRef. """
 import os
 import re
+from header import PLAYERS
 
 
 def match_logs_link(player_id, season, player_name):
     """ Return the page with all matches from a season log."""
+
+    link = "https://fbref.com/en/players/" + player_id + '/'
+    link += "matchlogs/" + season + '/' + player_name.replace(' ', '-')
+    return link + '-Match-Logs'
+
+def logs_link(player_id, season, player_name):
+    """ Return the page with all matches from a season log
+        when an error ocorr in the first option.
+    ."""
 
     link = "https://fbref.com/en/players/" + player_id + '/'
     link += "matchlogs/" + season + '/' + player_name.replace(' ', '-')
@@ -112,7 +122,7 @@ def parse_in_tags(page, join=True):
 
         for index, pag in enumerate(pages):
             pages[index] = remove_tokens(pag, ['\t', '\n', '<', '>', '',
-                                               '</th>', '<td>', '<br>'])
+                                               '</th>', '<td>', '<br>', '&nbsp;'])
 
         if join:
             return ''.join(pages)
@@ -136,3 +146,29 @@ def remove_tokens(page, tokens):
         return ''.join(text_aux[:-1])
 
     return ''.join(page)
+
+
+def write_file(info, header=False):
+    """ Write the dataset. """
+    with open("Output/players_info.txt", 'a') as file:
+        if header:
+            _write_header(file, PLAYERS)
+
+        matches = info['Matches']
+        info.pop('Matches', None)
+        info = list(info.values())
+        for match in matches:
+            # Writing the first features
+            file.write('\t'.join(info) + '\t')
+            # Writing the matches features
+            file.write('\t'.join(match) + '\n')
+
+
+def _write_header(file, header):
+    """ Write a header in the dataset. """
+
+    for index, feature in enumerate(header):
+        if index < len(header) - 1:
+            file.write(feature + "\t")
+        else:
+            file.write(feature + "\n")

@@ -1,0 +1,4 @@
+Xabi Alonso	dc001a06	False
+Álvaro Arbeloa	6dc73abd	False
+Kaká	b2d6ea70	2017
+Rafael Márquez	ce067ffe	False

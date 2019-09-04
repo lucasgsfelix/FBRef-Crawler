@@ -3,15 +3,21 @@ from collections import OrderedDict
 import parser
 
 
-def get_player(player_id, player_name, season):
+def get_player(player_id, player_name, season, header=False):
     """ Return all statistics of a player. """
+    print("Evaluating ", player_name, "in season:", season)
 
     player_info = {}
 
     link = parser.match_logs_link(player_id, parser.soccer_season(season),
                                   player_name)
-
     player_page = parser.get_page(link)
+
+    # when a not valid link is returned
+    if "<tbody>" not in player_page:
+        link = parser.logs_link(player_id, str(season), player_name)
+        player_page = parser.get_page(link)
+
 
     player_info['Name'] = player_name
     player_info['Id'] = player_id
@@ -19,6 +25,8 @@ def get_player(player_id, player_name, season):
     token = "Position:</strong>"
     player_info['Position'] = parser.retrieve_in_tags(token, '<', player_page,
                                                       parse=True)
+
+    player_info['Position'] = player_info['Position'].split(')')[0] + ')'
 
     token = 'Footed:</strong>'
     player_info['Foot'] = parser.retrieve_in_tags(token, '<', player_page,
@@ -45,17 +53,28 @@ def get_player(player_id, player_name, season):
     key = 'Birth Place'
     player_info[key] = parser.retrieve_in_tags(token, end, player_page,
                                                parse=True)
+    player_info[key] = parser.remove_tokens(player_info[key], ['  ', '\n'])
+    player_info[key] = player_info[key].replace('in', '')
 
     token = 'National Team:</strong>'
     key = 'National Team'
     player_info[key] = parser.retrieve_in_tags(token, '<span', player_page,
                                                parse=True)
+    player_info[key] = player_info[key].replace('&nbsp;', '')
+
+    if player_info[key][-1] == ' ':
+        player_info[key] = player_info[key][:-1]
+
+    for key in player_info:
+        if player_info[key] is None:
+            player_info[key] = "None"
 
     player_page = parser.retrieve_in_tags("<tbody>", "</tbody>", player_page)
 
     player_info['Matches'] = player_matches(player_page)
 
-    return player_info
+
+    parser.write_file(player_info, header)
 
 
 def player_matches(player_page):
@@ -72,6 +91,8 @@ def player_matches(player_page):
     for match in matches:
         plays += match
 
+    token = 'On matchday squad, but did not play'
+    matches = []
     for index, play in enumerate(plays):
 
         plays[index] = parser.retrieve_in_tags('>', '<', play, parse=True)
@@ -79,8 +100,13 @@ def player_matches(player_page):
         plays[index] = list(map(lambda x: x.replace('&ndash;', '-'),
                                 plays[index]))
 
-        plays[index] = list(filter(lambda x: x not in ['', ' '], plays[index]))
+        plays[index] = list(filter(lambda x: x not in ['', ' ', 'Match Report'],
+                                plays[index]))
 
         plays[index] = list(OrderedDict.fromkeys((plays[index])))
 
-    return plays
+        if token not in plays[index]:
+            matches.append(plays[index])
+
+
+    return matches

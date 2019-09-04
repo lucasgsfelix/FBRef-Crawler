@@ -1,7 +1,6 @@
 Player	ID	Retired
 Cristiano Ronaldo	dea698d9	False
 Neymar	69384e5d	False
-Kaká	b2d6ea70	2017
 Andrés Iniesta	cfd65a29	False
 Mesut Özil	16380240	False
 Gerard Piqué	adfc9123	False
@@ -13,23 +12,18 @@ Sergio Ramos	08511d65	False
 Luis Suárez	a6154613	False
 Sergio Agüero	4d034881	False
 David De Gea	7ba6d84e	False
-Xabi Alonso	dc001a06	False
 Marcelo	603116a7	False
 Cesc Fàbregas	33508c78	False
 Karim Benzema	70d74ece	False
 Mohamed Salah	e342ad68	False
 Javier Hernández	189cee7b	False
-David Villa	ade08a67	False
-David Luiz	c0e27d1a	False
 Dani Alves	c9e99e49	False
-Javier Mascherano	5070881b	False
 Juan Mata	29733c72	False
 Toni Kroos	6ce1f46f	False
 Paul Pogba	867239d3	False
 Gonzalo Higuaín	8a08491a	False
 Eden Hazard	a39bb753	False
 Antoine Griezmann	df69b544	False
-Álvaro Arbeloa	6dc73abd	False
 Zlatan Ibrahimovic	4cde5509	False
 Raphaël Varane	9f8e9423	False
 Isco	a0b4bb3e	False
@@ -42,10 +36,12 @@ Mario Götze	9efa1d25	False
 Arturo Vidal	67cdbc0e	False
 Thomas Müller	3c6089ab	False
 Manuel Neuer	8778c910	False
-Rafael Márquez	ce067ffe	False
 Juan Cuadrado	0ab1f153	False
 David Silva	e2716bd0	False
 Mario Balotelli	8ff07990	False
 Jack Wilshere	9c318325	False
 Daniel Carvajal	4958bfb2	False
 Fernando Torres	bdf7b97d	2019
+David Luiz	c0e27d1a	False
+David Villa	ade08a67	False
+Javier Mascherano	5070881b
