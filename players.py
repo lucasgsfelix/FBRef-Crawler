@@ -11,13 +11,13 @@ def get_player(player_id, player_name, season, header=False):
 
     link = parser.match_logs_link(player_id, parser.soccer_season(season),
                                   player_name)
+
     player_page = parser.get_page(link)
 
     # when a not valid link is returned
     if "<tbody>" not in player_page:
         link = parser.logs_link(player_id, str(season), player_name)
         player_page = parser.get_page(link)
-
 
     player_info['Name'] = player_name
     player_info['Id'] = player_id
@@ -73,7 +73,6 @@ def get_player(player_id, player_name, season, header=False):
 
     player_info['Matches'] = player_matches(player_page)
 
-
     parser.write_file(player_info, header)
 
 
@@ -92,6 +91,7 @@ def player_matches(player_page):
         plays += match
 
     token = 'On matchday squad, but did not play'
+    invalid_tokens = ['', ' ', 'Match Report']
     matches = []
     for index, play in enumerate(plays):
 
@@ -100,13 +100,12 @@ def player_matches(player_page):
         plays[index] = list(map(lambda x: x.replace('&ndash;', '-'),
                                 plays[index]))
 
-        plays[index] = list(filter(lambda x: x not in ['', ' ', 'Match Report'],
-                                plays[index]))
+        plays[index] = list(filter(lambda x: x not in invalid_tokens,
+                                   plays[index]))
 
         plays[index] = list(OrderedDict.fromkeys((plays[index])))
 
         if token not in plays[index]:
             matches.append(plays[index])
-
 
     return matches

@@ -11,6 +11,7 @@ def match_logs_link(player_id, season, player_name):
     link += "matchlogs/" + season + '/' + player_name.replace(' ', '-')
     return link + '-Match-Logs'
 
+
 def logs_link(player_id, season, player_name):
     """ Return the page with all matches from a season log
         when an error ocorr in the first option.
@@ -119,10 +120,10 @@ def parse_in_tags(page, join=True):
             while aux <= len(page)-1 and page[aux] != '<':
                 aux += 1
             pages.append(page[pos:aux])
-
+        tokens_list = ['\t', '\n', '<', '>', '', '</th>', '<td>',
+                       '<br>', '&nbsp;']
         for index, pag in enumerate(pages):
-            pages[index] = remove_tokens(pag, ['\t', '\n', '<', '>', '',
-                                               '</th>', '<td>', '<br>', '&nbsp;'])
+            pages[index] = remove_tokens(pag, tokens_list)
 
         if join:
             return ''.join(pages)
