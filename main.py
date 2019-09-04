@@ -13,7 +13,7 @@ if __name__ == '__main__':
         PLAYERS_INFO = list(map(lambda x: x.split('\t'), PLAYERS_INFO))
 
         # making a dict with player_id : player_name
-        PLAYERS_INFO = {player[1] : player[0] for player in PLAYERS_INFO}
+        PLAYERS_INFO = {player[1]: player[0] for player in PLAYERS_INFO}
 
     for season in range(SEASON_START, SEASON_END):
 

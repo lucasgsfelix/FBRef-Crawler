@@ -6,19 +6,64 @@ import parser
 def get_player(player_id, player_name, season):
     """ Return all statistics of a player. """
 
+    player_info = {}
+
     link = parser.match_logs_link(player_id, parser.soccer_season(season),
                                   player_name)
 
     player_page = parser.get_page(link)
 
-    player_pages = parser.retrieve_in_tags("<tbody>", "</tbody>",
-                                           player_page)
+    player_info['Name'] = player_name
+    player_info['Id'] = player_id
+
+    token = "Position:</strong>"
+    player_info['Position'] = parser.retrieve_in_tags(token, '<', player_page,
+                                                      parse=True)
+
+    token = 'Footed:</strong>'
+    player_info['Foot'] = parser.retrieve_in_tags(token, '<', player_page,
+                                                  parse=True)
+
+    token = 'itemprop="height">'
+    player_info['Height'] = parser.retrieve_in_tags(token, '<', player_page,
+                                                    parse=True)
+
+    token = 'itemprop="weight">'
+    player_info['Weight'] = parser.retrieve_in_tags(token, '<', player_page,
+                                                    parse=True)
+
+    token = 'data-birth="'
+    end = '">'
+    key = 'Birth Date'
+    player_info[key] = parser.retrieve_in_tags(token, end, player_page,
+                                               parse=True)
+
+    token = 'itemprop="birthPlace">'
+    end = '</span>'
+    key = 'Birth Place'
+    player_info[key] = parser.retrieve_in_tags(token, end, player_page,
+                                               parse=True)
+
+    token = 'National Team:</strong>'
+    key = 'National Team'
+    player_info[key] = parser.retrieve_in_tags(token, '<span', player_page,
+                                               parse=True)
+
+    player_page = parser.retrieve_in_tags("<tbody>", "</tbody>", player_page)
+
+    matches = player_matches(player_page)
+
+    return matches
+
+
+def player_matches(player_page):
+    ''' Get all the matches that a player has played in a season.'''
 
     # return unparsed matches that a player played
     start = '<tr ><th scope="row"'
     end = '</td></tr>'
     matches = list(map(lambda x: parser.retrieve_in_tags(start, end, x),
-                       player_pages))
+                       player_page))
 
     # Now I want to return the values between the tags
     plays = []
