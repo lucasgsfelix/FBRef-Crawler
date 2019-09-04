@@ -4,7 +4,7 @@ import players
 
 if __name__ == '__main__':
 
-    SEASON_START, SEASON_END = 2014, 2019
+    SEASON_START, SEASON_END = 2015, 2019
 
     with open("Input/players_info.txt", 'r') as file:
 
