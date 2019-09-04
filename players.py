@@ -32,6 +32,8 @@ def get_player(player_id, player_name, season):
     player_info['Weight'] = parser.retrieve_in_tags(token, '<', player_page,
                                                     parse=True)
 
+    player_info['Season'] = parser.soccer_season(season)
+
     token = 'data-birth="'
     end = '">'
     key = 'Birth Date'
@@ -51,9 +53,9 @@ def get_player(player_id, player_name, season):
 
     player_page = parser.retrieve_in_tags("<tbody>", "</tbody>", player_page)
 
-    matches = player_matches(player_page)
+    player_info['Matches'] = player_matches(player_page)
 
-    return matches
+    return player_info
 
 
 def player_matches(player_page):

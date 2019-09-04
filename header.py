@@ -11,4 +11,4 @@ PLAYERS = ['Name', 'Id', 'Position', 'Foot', 'Height', 'Weight', 'Birth Date',
            'Venue', 'Result', 'Oponent', 'Start', 'Min. Played', 'Gols',
            'Assist.', 'Shots', 'Sh. On Target.', 'Crosses', 'Fouls Drawn',
            'Pen. Kicks', 'PK attempt', 'Tackles Won', 'Interceptions',
-           'Fouls Commited', 'Yellow C.', 'Red C.']
+           'Fouls Commited', 'Yellow C.', 'Red C.', 'Season']
