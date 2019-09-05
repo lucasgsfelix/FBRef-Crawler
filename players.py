@@ -1,6 +1,7 @@
 """ Return a player statistics from FBRef. """
-from collections import OrderedDict
+import re
 import parser
+from collections import OrderedDict
 
 
 def get_player(player_id, player_name, season, header=False):
@@ -25,8 +26,7 @@ def get_player(player_id, player_name, season, header=False):
     token = "Position:</strong>"
     player_info['Position'] = parser.retrieve_in_tags(token, '<', player_page,
                                                       parse=True)
-
-    player_info['Position'] = player_info['Position'].split(')')[0] + ')'
+    player_info['Position'] = parse_position(player_info['Position'])
 
     token = 'Footed:</strong>'
     player_info['Foot'] = parser.retrieve_in_tags(token, '<', player_page,
@@ -65,9 +65,7 @@ def get_player(player_id, player_name, season, header=False):
     if player_info[key][-1] == ' ':
         player_info[key] = player_info[key][:-1]
 
-    for key in player_info:
-        if player_info[key] is None:
-            player_info[key] = "None"
+    player_info = replace_none(player_info)
 
     player_page = parser.retrieve_in_tags("<tbody>", "</tbody>", player_page)
 
@@ -109,3 +107,27 @@ def player_matches(player_page):
             matches.append(plays[index])
 
     return matches
+
+
+def parse_position(position):
+    """ Parse position feature of a player"""
+
+    position = position.replace('&nbsp;&#9642;&nbsp;', '')
+    if ')' in position:
+        position = position.split(')')[0] + ')'
+        if ' &amp; ' in position:
+            position = position.replace(' &amp; ', '')
+    else:
+        position = re.sub(r'^[A-Z] ', '', position)
+
+    return position
+
+
+def replace_none(player_info):
+    """ Replace None values in the players information"""
+
+    for key in player_info:
+        if player_info[key] is None:
+            player_info[key] = "None"
+
+    return player_info
