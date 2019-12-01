@@ -1,7 +1,7 @@
 """ Resposible to parse the tables from FBRef. """
 import os
 import re
-from header import PLAYERS
+from header import PLAYERS, MATCHES
 
 
 def match_logs_link(player_id, season, player_name):
@@ -153,23 +153,30 @@ def write_file(info, header=False):
     """ Write the dataset. """
     with open("Output/players_info.txt", 'a') as file:
         if header:
-            _write_header(file, PLAYERS)
+            _write_header(file, PLAYERS, False)
+            _write_header(file, MATCHES)
 
-        matches = info['Matches']
-        info.pop('Matches', None)
-        info = list(info.values())
-        for match in matches:
+        player_info = [info[key] for key in info.keys() if key != 'Matches']
+        for match in info['Matches']:
             # Writing the first features
-            file.write('\t'.join(info) + '\t')
+            file.write('\t'.join(player_info))
             # Writing the matches features
-            file.write('\t'.join(match) + '\n')
+            values = ''
+            for feature in MATCHES:
+                #print(match[feature], feature)
+                values = values + '\t' + str(match[feature])
+            file.write(values + '\n')
 
 
-def _write_header(file, header):
+def _write_header(file, header, print_break=True):
     """ Write a header in the dataset. """
 
     for index, feature in enumerate(header):
         if index < len(header) - 1:
             file.write(feature + "\t")
         else:
-            file.write(feature + "\n")
+            if print_break:
+                file.write(feature + "\n")
+            else:
+                file.write(feature + '\t')
+
